@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Desafío de Intervalos Musicales</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        #responseMessage {
+            min-height: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 128, 0, 0.2);
+            border-radius: 50%;
+            border-top-color: green;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        #verifyButton:disabled {
+            background-color: #ACD981;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .toggle-checkbox:checked {
+            @apply: right-0 border-green-400;
+            right: 0;
+            border-color: #68D391;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            @apply: bg-green-400;
+            background-color: #68D391;
+        }
+        .toggle-checkbox {
+            @apply: hidden;
+        }
+        .toggle-label {
+            @apply: block w-10 h-6 bg-gray-300 rounded-full;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+        
+        .shake-animation {
+            animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800 text-center" id="quizTitle">Desafío de intervalos musicales</h2>
+        <div id="question" class="text-lg font-medium text-gray-600 mb-4"></div>
+        <input type="text" id="userResponse" placeholder="Escribe tu respuesta aquí"
+            class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none w-full mb-4"
+            onkeyup="event.keyCode === 13 && verifyResponse()">
+        <button id="verifyButton"
+            class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onclick="verifyResponse()">
+            Verificar respuesta
+        </button>
+        <div id="responseMessage" class="mt-4 text-sm font-medium"></div>
+
+        <div class="flex justify-center items-center mt-8">
+            <span class="mr-2">Escala anglosajona</span>
+            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                <input type="checkbox" name="toggle" id="scaleToggle"
+                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                    onchange="toggleScale()" />
+                <label for="scaleToggle"
+                    class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
