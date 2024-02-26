@@ -15,22 +15,12 @@
 }
 
 .toggle-checkbox:checked {
-    @apply: right-0 border-green-400;
     right: 0;
     border-color: #68D391;
 }
 
 .toggle-checkbox:checked+.toggle-label {
-    @apply: bg-green-400;
     background-color: #68D391;
-}
-
-.toggle-checkbox {
-    @apply: hidden;
-}
-
-.toggle-label {
-    @apply: block w-10 h-6 bg-gray-300 rounded-full;
 }
 
 @keyframes spin {
@@ -141,7 +131,7 @@
 
 .virtual-piano .black {
     width: calc(100%/14);
-    margin: 0 0 0 -.74em;
+    margin: 0 0 0 calc(-1 * (100% / 14) / 2);
     z-index: 2;
     border: 1px solid #000;
     border-radius: 0 0 3px 3px;
@@ -159,13 +149,13 @@
 .virtual-piano .g,
 .virtual-piano .a,
 .virtual-piano .b {
-    margin: 0 0 0 -.74em
+    margin: 0 0 0 calc(-1 * (100% / 14) / 2);
 }
 
 .virtual-piano li:first-child {
-    border-radius: 5px 0 5px 5px
+    border-radius: 5px 0 5px 5px;
 }
 
 .virtual-piano li:last-child {
-    border-radius: 0 5px 5px 5px
+    border-radius: 0 5px 5px 5px;
 }
