@@ -55,11 +55,15 @@ function showMessage(message, isCorrect) {
 function shakeButton() {
   verifyButton.classList.add('shake-animation');
   verifyButton.classList.remove('bg-blue-500');
+  verifyButton.classList.remove('hover:bg-blue-700');
   verifyButton.classList.add('bg-red-500');
+  verifyButton.classList.add('hover:bg-red-700');
   setTimeout(() => {
     verifyButton.classList.remove('shake-animation');
     verifyButton.classList.remove('bg-red-500');
+    verifyButton.classList.remove('hover:bg-red-700');
     verifyButton.classList.add('bg-blue-500');
+    verifyButton.classList.add('hover:bg-blue-700');
   }, 820);
 }
 
