@@ -24,7 +24,7 @@ function generateQuestion() {
       ? (noteIndex + 1) % notes.length
       : (noteIndex - 1 + notes.length) % notes.length;
 
-  questionElement.innerHTML = `¿Qué nota hay a la ${direction} de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
+  questionElement.innerHTML = `¿Qué nota hay a la <b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
   questionElement.dataset.response = notes[responseIndex];
   resetUI();
 }
