@@ -40,14 +40,24 @@ function selectNoteAndDirection() {
   };
 }
 
+function pressActiveKey(noteIndex) {
+  document.querySelectorAll('.virtual-piano li').forEach((note) => {
+    note.classList.remove('active');
+  });
+  const activeNote = document.getElementById(`note-${noteIndex}`);
+  activeNote.classList.add('active');
+}
+
 function generateQuestion() {
   const { direction, selectedNote, responseIndex } = selectNoteAndDirection();
+  const responseNote = notes[responseIndex];
   questionElement.classList.add('fade-animation');
   setTimeout(() => {
     questionElement.innerHTML = `¿Qué nota hay a la <b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
-    questionElement.dataset.response = notes[responseIndex];
+    questionElement.dataset.response = responseNote;
     questionElement.classList.remove('fade-animation');
     startTime = Date.now();
+    pressActiveKey(responseIndex + 1);
   }, 250);
 }
 
@@ -63,8 +73,7 @@ function verifyResponse() {
     isCorrect ? '¡Correcto!' : 'Incorrecto. Inténtalo de nuevo.',
     isCorrect
   );
-  userResponse.value = '';
-  userResponse.focus();
+  isCorrect ? (userResponse.value = '') : userResponse.select();
   if (isCorrect) {
     correctCount++;
     pulseButtonSuccess();
@@ -84,9 +93,8 @@ function verifyResponse() {
 }
 
 function showMessage(message, isCorrect) {
-  responseMessage.className = `mt-4 text-sm font-medium ${
-    isCorrect ? 'text-green-500' : 'text-red-500'
-  }`;
+  responseMessage.classList.add(isCorrect ? 'text-green-500' : 'text-red-500');
+  responseMessage.classList.remove(isCorrect ? 'text-red-500' : 'text-green-500');
   responseMessage.innerHTML = `<span>${
     isCorrect ? '✅' : '❌'
   } ${message}</span>`;
