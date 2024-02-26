@@ -54,18 +54,34 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
             20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
-        
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
         .shake-animation {
             animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
-            transform: translate3d(0, 0, 0);
-            backface-visibility: hidden;
-            perspective: 1000px;
+        }
+
+        .pulse-animation {
+            animation: pulse 0.5s ease-in-out both;
+        }
+
+        .fade-animation {
+            animation: fadeInOut 0.5s ease-in-out;
         }
     </style>
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center h-screen">
-    <div class="max-w-sm md:max-w-md w-full p-4 bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 lg:p-8">
+    <div class="max-w-sm m-2 md:max-w-md w-full p-4 bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 lg:p-8">
         <div class="flex flex-col items-center">
             <img class="mb-3 w-24 h-24 rounded-full shadow-lg" src="./assets/notes-circle.jpg" width="150"
                 alt="Imagen de unas notas musicales en círculo">

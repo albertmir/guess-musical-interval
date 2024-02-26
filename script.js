@@ -10,61 +10,92 @@ const questionElement = document.getElementById('question');
 const responseMessage = document.getElementById('responseMessage');
 
 function toggleScale() {
-  const isChecked = document.getElementById('scaleToggle').checked;
-  notes = isChecked ? [...notesEn] : [...notesEs];
+  notes = document.getElementById('scaleToggle').checked
+    ? [...notesEn]
+    : [...notesEs];
   generateQuestion();
 }
 
-function generateQuestion() {
-  const noteIndex = Math.floor(Math.random() * (notes.length - 1));
+function selectNoteAndDirection() {
+  const noteIndex = Math.floor(Math.random() * notes.length);
   const direction = Math.random() > 0.5 ? 'derecha' : 'izquierda';
-  const selectedNote = notes[noteIndex];
-  const responseIndex =
-    direction === 'derecha'
-      ? (noteIndex + 1) % notes.length
-      : (noteIndex - 1 + notes.length) % notes.length;
+  return {
+    noteIndex,
+    direction,
+    selectedNote: notes[noteIndex],
+    responseIndex:
+      direction === 'derecha'
+        ? (noteIndex + 1) % notes.length
+        : (noteIndex - 1 + notes.length) % notes.length,
+  };
+}
 
-  questionElement.innerHTML = `¿Qué nota hay a la <b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
-  questionElement.dataset.response = notes[responseIndex];
-  resetMessage();
+function generateQuestion() {
+  const { direction, selectedNote, responseIndex } = selectNoteAndDirection();
+  questionElement.classList.add('fade-animation');
+  setTimeout(() => {
+    questionElement.innerHTML = `¿Qué nota hay a la <b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
+    questionElement.dataset.response = notes[responseIndex];
+    questionElement.classList.remove('fade-animation');
+  }, 250);
 }
 
 function verifyResponse() {
-  if (
-    userResponse.value.toUpperCase().trim() === questionElement.dataset.response
-  ) {
-    showMessage('¡Correcto!', true);
-    userResponse.value = '';
-    userResponse.focus();
-    setTimeout(generateQuestion, 1000);
+  const isCorrect =
+    userResponse.value.toUpperCase().trim() ===
+    questionElement.dataset.response;
+  showMessage(
+    isCorrect ? '¡Correcto!' : 'Incorrecto. Inténtalo de nuevo.',
+    isCorrect
+  );
+  userResponse.value = '';
+  userResponse.focus();
+  if (isCorrect) {
+    pulseButtonSuccess();
+    generateQuestion();
+    setTimeout(() => {
+      resetMessage();
+    }, 1000);
   } else {
-    showMessage('Incorrecto. Inténtalo de nuevo.', false);
     shakeButtonError();
+    setTimeout(() => {
+      resetMessage();
+    }, 1000);
     userResponse.select();
   }
 }
 
 function showMessage(message, isCorrect) {
-  const icon = isCorrect ? '✅' : '❌';
-  const spinner = isCorrect ? '<div class="spinner"></div>' : '';
   responseMessage.className = `mt-4 text-sm font-medium ${
     isCorrect ? 'text-green-500' : 'text-red-500'
   }`;
-  responseMessage.innerHTML = `<span>${icon} ${message}</span> ${spinner}`;
+  responseMessage.innerHTML = `<span>${
+    isCorrect ? '✅' : '❌'
+  } ${message}</span>`;
+  if (isCorrect) setTimeout(resetMessage, 2000);
+}
+
+function pulseButtonSuccess() {
+  verifyButton.classList.add('pulse-animation');
+  setTimeout(() => {
+    verifyButton.classList.remove('pulse-animation');
+  }, 1000);
 }
 
 function shakeButtonError() {
-  verifyButton.classList.add('shake-animation');
-  verifyButton.classList.remove('bg-blue-500');
-  verifyButton.classList.remove('hover:bg-blue-700');
-  verifyButton.classList.add('bg-red-500');
-  verifyButton.classList.add('hover:bg-red-700');
+  verifyButton.classList.add(
+    'shake-animation',
+    'bg-red-500',
+    'hover:bg-red-700'
+  );
+  verifyButton.classList.remove('bg-blue-500', 'hover:bg-blue-700');
   setTimeout(() => {
-    verifyButton.classList.remove('shake-animation');
-    verifyButton.classList.remove('bg-red-500');
-    verifyButton.classList.remove('hover:bg-red-700');
-    verifyButton.classList.add('bg-blue-500');
-    verifyButton.classList.add('hover:bg-blue-700');
+    verifyButton.classList.remove(
+      'shake-animation',
+      'bg-red-500',
+      'hover:bg-red-700'
+    );
+    verifyButton.classList.add('bg-blue-500', 'hover:bg-blue-700');
   }, 820);
 }
 
