@@ -76,6 +76,11 @@ function resetUI() {
   userResponse.disabled = false;
   verifyButton.disabled = false;
   userResponse.value = '';
-  userResponse.focus();
-  responseMessage.innerHTML = '';
+  // This promise is to fix the focus on iOS devices
+  new Promise((resolve) => {
+    responseMessage.innerHTML = '';
+    resolve();
+  }).then(() => {
+    userResponse.focus();
+  });
 }
