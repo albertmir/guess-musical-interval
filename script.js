@@ -73,9 +73,10 @@ function verifyResponse() {
     isCorrect ? '¡Correcto!' : 'Incorrecto. Inténtalo de nuevo.',
     isCorrect
   );
-  isCorrect ? (userResponse.value = '') : userResponse.select();
   if (isCorrect) {
     correctCount++;
+    userResponse.value = '';
+    userResponse.focus();
     pulseButtonSuccess();
     generateQuestion();
     setTimeout(() => {
