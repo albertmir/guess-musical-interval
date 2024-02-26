@@ -26,7 +26,7 @@ function generateQuestion() {
 
   questionElement.innerHTML = `¿Qué nota hay a la <b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
   questionElement.dataset.response = notes[responseIndex];
-  resetUI();
+  resetMessage();
 }
 
 function verifyResponse() {
@@ -34,10 +34,12 @@ function verifyResponse() {
     userResponse.value.toUpperCase().trim() === questionElement.dataset.response
   ) {
     showMessage('¡Correcto!', true);
+    userResponse.value = '';
+    userResponse.focus();
     setTimeout(generateQuestion, 1000);
   } else {
     showMessage('Incorrecto. Inténtalo de nuevo.', false);
-    shakeButton();
+    shakeButtonError();
     userResponse.select();
   }
 }
@@ -49,10 +51,9 @@ function showMessage(message, isCorrect) {
     isCorrect ? 'text-green-500' : 'text-red-500'
   }`;
   responseMessage.innerHTML = `<span>${icon} ${message}</span> ${spinner}`;
-  if (isCorrect) disableUI();
 }
 
-function shakeButton() {
+function shakeButtonError() {
   verifyButton.classList.add('shake-animation');
   verifyButton.classList.remove('bg-blue-500');
   verifyButton.classList.remove('hover:bg-blue-700');
@@ -67,15 +68,6 @@ function shakeButton() {
   }, 820);
 }
 
-function disableUI() {
-  userResponse.disabled = true;
-  verifyButton.disabled = true;
-}
-
-function resetUI() {
-  userResponse.disabled = false;
-  verifyButton.disabled = false;
-  userResponse.value = '';
+function resetMessage() {
   responseMessage.innerHTML = '';
-  userResponse.select();
 }

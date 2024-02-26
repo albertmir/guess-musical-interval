@@ -23,12 +23,6 @@
             animation: spin 1s linear infinite;
         }
 
-        #verifyButton:disabled {
-            background-color: #ACD981;
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-
         .toggle-checkbox:checked {
             @apply: right-0 border-green-400;
             right: 0;
@@ -79,7 +73,7 @@
             <div id="question" class="text-md font-medium text-gray-600 mb-4"></div>
             <input type="text" id="userResponse" placeholder="Escribe tu respuesta aquí"
                 class="border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none w-full mb-4"
-                onkeyup="event.keyCode === 13 && verifyResponse()">
+                onkeyup="event.keyCode === 13 && verifyResponse()" autofocus="autofocus">
             <button id="verifyButton"
                 class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onclick="verifyResponse()">
