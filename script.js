@@ -5,6 +5,7 @@ let wrongCount = 0;
 let totalResponseTime = 0;
 let questionCount = 0;
 let startTime;
+let lastNoteIndex = null;
 
 const notesEs = ['DO', 'RE', 'MI', 'FA', 'SOL', 'LA', 'SI'];
 const notesEn = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -27,8 +28,13 @@ function toggleScale() {
 }
 
 function selectNoteAndDirection() {
-  const noteIndex = Math.floor(Math.random() * notes.length);
+  let noteIndex;
+  do {
+    noteIndex = Math.floor(Math.random() * notes.length);
+  } while (noteIndex === lastNoteIndex);
   const direction = Math.random() > 0.5 ? 'derecha' : 'izquierda';
+  lastNoteIndex = noteIndex;
+
   return {
     noteIndex,
     direction,
@@ -40,7 +46,7 @@ function selectNoteAndDirection() {
   };
 }
 
-function pressActiveKey(noteIndex) {
+function pressActivePianoKey(noteIndex) {
   document.querySelectorAll('.virtual-piano li').forEach((note) => {
     note.classList.remove('active');
   });
@@ -53,11 +59,11 @@ function generateQuestion() {
   const responseNote = notes[responseIndex];
   questionElement.classList.add('fade-animation');
   setTimeout(() => {
-    questionElement.innerHTML = `¿Qué nota hay a la <b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
+    questionElement.innerHTML = `¿Cuál es la nota activa, qué está a la <br><b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
     questionElement.dataset.response = responseNote;
     questionElement.classList.remove('fade-animation');
     startTime = Date.now();
-    pressActiveKey(responseIndex + 1);
+    pressActivePianoKey(responseIndex + 1);
   }, 250);
 }
 
@@ -90,7 +96,25 @@ function verifyResponse() {
     }, 1000);
     userResponse.select();
   }
-  updateUI();
+  updateCounters();
+}
+
+function calculateAverageTime() {
+  const averageTimeSeconds =
+    questionCount > 0 ? totalResponseTime / questionCount / 1000 : 0;
+  return averageTimeSeconds;
+}
+
+function updateCounters() {
+  const averageTimeSeconds = calculateAverageTime();
+  const timeDisplay =
+    averageTimeSeconds >= 60
+      ? `${(averageTimeSeconds / 60).toFixed(2)}m`
+      : `${averageTimeSeconds.toFixed(2)}s`;
+
+  averageTimeElement.textContent = timeDisplay;
+  correctCountElement.textContent = correctCount;
+  wrongCountElement.textContent = wrongCount;
 }
 
 function showMessage(message, isCorrect) {
@@ -100,6 +124,10 @@ function showMessage(message, isCorrect) {
     isCorrect ? '✅' : '❌'
   } ${message}</span>`;
   if (isCorrect) setTimeout(resetMessage, 2000);
+}
+
+function resetMessage() {
+  responseMessage.innerHTML = '';
 }
 
 function pulseButtonSuccess() {
@@ -124,26 +152,4 @@ function shakeButtonError() {
     );
     verifyButton.classList.add('bg-blue-500', 'hover:bg-blue-700');
   }, 820);
-}
-
-function updateUI() {
-  correctCountElement.textContent = correctCount;
-  wrongCountElement.textContent = wrongCount;
-  const averageTimeSeconds =
-    questionCount > 0 ? totalResponseTime / questionCount / 1000 : 0;
-
-  let timeDisplay;
-  if (averageTimeSeconds >= 60) {
-    const averageTimeMinutes = averageTimeSeconds / 60;
-    timeDisplay = `${averageTimeMinutes.toFixed(2)}m`;
-  } else {
-    timeDisplay = `${averageTimeSeconds.toFixed(2)}s`;
-  }
-
-  averageTimeElement.textContent = timeDisplay;
-}
-
-
-function resetMessage() {
-  responseMessage.innerHTML = '';
 }
