@@ -20,18 +20,42 @@
             <div id="question" class="h-12 text-md text-center font-medium text-gray-600 mb-2"></div>
             <div class="w-full h-42 flex justify-center items-center mt-2 mb-6">
                 <ul class="virtual-piano flex relative pt-8 px-6">
-                    <li id="note-1" class="white c h-40"></li>
-                    <li class="black df h-20"></li>
-                    <li id="note-2" class="white d h-40"></li>
-                    <li class="black ef h-20"></li>
-                    <li id="note-3" class="white e h-40"></li>
-                    <li id="note-4" class="white f h-40"></li>
-                    <li class="black gf h-20"></li>
-                    <li id="note-5" class="white g h-40"></li>
-                    <li class="black af h-20"></li>
-                    <li id="note-6" class="white a h-40"></li>
-                    <li class="black bf h-20"></li>
-                    <li id="note-7" class="white b h-40"></li>
+                    <li id="note-c" class="white c h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
+                    <li id="note-cs" class="black cs h-20 flex justify-center items-end text-gray-200 text-xs">
+                        <!-- <span class="note-label mb-1"></span> -->
+                    </li>
+                    <li id="note-d" class="white d h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
+                    <li id="note-ds" class="black ds h-20 flex justify-center items-end text-gray-200 text-xs">
+                        <!-- <span class="note-label mb-1"></span> -->
+                    </li>
+                    <li id="note-e" class="white e h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
+                    <li id="note-f" class="white f h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
+                    <li id="note-fs" class="black fs h-20 flex justify-center items-end text-gray-200 text-xs">
+                        <!-- <span class="note-label mb-1"></span> -->
+                    </li>
+                    <li id="note-g" class="white g h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
+                    <li id="note-gs" class="black gs h-20 flex justify-center items-end text-gray-200 text-xs">
+                        <!-- <span class="note-label mb-1"></span> -->
+                    </li>
+                    <li id="note-a" class="white a h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
+                    <li id="note-as" class="black as h-20 flex justify-center items-end text-gray-200 text-xs">
+                        <!-- <span class="note-label mb-1"></span> -->
+                    </li>
+                    <li id="note-b" class="white b h-40 flex justify-center items-end text-gray-400 text-xs">
+                        <span class="note-label mb-1"></span>
+                    </li>
                 </ul>
             </div>
             <input type="text" id="userResponse" placeholder="Escribe tu respuesta aquí"
@@ -64,8 +88,20 @@
             </div>
         </div>
     </div>
-    <div class="text-center mt-6">
-        <div class="flex justify-center items-center mt-8">
+    <div class="text-center mt-8">
+        <div class="flex justify-center items-center">
+            <span class="mr-2">Mostrar notas</span>
+            <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                <input type="checkbox" name="toggle" id="showLabelsToggle"
+                    class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                    onchange="toggleLabels()" />
+                <label for="showLabelsToggle"
+                    class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-2">
+        <div class="flex justify-center items-center">
             <span class="mr-2">Escala anglosajona</span>
             <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                 <input type="checkbox" name="toggle" id="scaleToggle"

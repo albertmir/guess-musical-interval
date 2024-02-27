@@ -6,10 +6,28 @@ let totalResponseTime = 0;
 let questionCount = 0;
 let startTime;
 let lastResponseIndex = null;
+let currentLanguage = 'es';
+let currentNotation = 'es';
 
-const notesEs = ['DO', 'RE', 'MI', 'FA', 'SOL', 'LA', 'SI'];
-const notesEn = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-let notes = [...notesEs];
+const noteMapping = {
+  c: { es: 'DO', en: 'C' },
+  // cs: { es: 'DO#', en: 'C#' },
+  d: { es: 'RE', en: 'D' },
+  // ds: { es: 'RE#', en: 'D#' },
+  e: { es: 'MI', en: 'E' },
+  f: { es: 'FA', en: 'F' },
+  // fs: { es: 'FA#', en: 'F#' },
+  g: { es: 'SOL', en: 'G' },
+  // gs: { es: 'SOL#', en: 'G#' },
+  a: { es: 'LA', en: 'A' },
+  // as: { es: 'LA#', en: 'A#' },
+  b: { es: 'SI', en: 'B' },
+};
+const directionMapping = {
+  left: { es: 'izquierda', en: 'left'},
+  right: { es: 'derecha', en: 'right'}
+}
+let noteKeys = Object.keys(noteMapping);
 
 const userResponse = document.getElementById('userResponse');
 const verifyButton = document.getElementById('verifyButton');
@@ -18,13 +36,20 @@ const responseMessage = document.getElementById('responseMessage');
 const correctCountElement = document.getElementById('correctCount');
 const wrongCountElement = document.getElementById('wrongCount');
 const averageTimeElement = document.getElementById('averageTime');
+const scaleToggle = document.getElementById('scaleToggle');
+const showLabelsToggle = document.getElementById('showLabelsToggle');
 
 
 function toggleScale() {
-  notes = document.getElementById('scaleToggle').checked
-    ? [...notesEn]
-    : [...notesEs];
+  document.getElementById('scaleToggle').checked
+    ? currentNotation = 'en'
+    : currentNotation = 'es';
+  if (showLabelsToggle.checked) showNoteLabels(currentNotation);
   generateQuestion();
+}
+
+function toggleLabels() {
+  showLabelsToggle.checked ? showNoteLabels(currentNotation) : hideNoteLabels();
 }
 
 function selectNoteAndDirection() {
@@ -33,42 +58,45 @@ function selectNoteAndDirection() {
   let direction;
 
   do {
-    noteIndex = Math.floor(Math.random() * notes.length);
-    direction = Math.random() > 0.5 ? 'derecha' : 'izquierda';
+    noteIndex = Math.floor(Math.random() * noteKeys.length);
+    direction = Math.random() > 0.5 ? 'left' : 'right';
     responseIndex =
-      direction === 'derecha'
-        ? (noteIndex + 1) % notes.length
-        : (noteIndex + notes.length - 1) % notes.length;
+      direction === 'right'
+        ? (noteIndex + 1) % noteKeys.length
+        : (noteIndex + noteKeys.length - 1) % noteKeys.length;
   } while (responseIndex === lastResponseIndex);
 
-  lastResponseIndex = responseIndex; 
+  lastResponseIndex = responseIndex;
 
   return {
     noteIndex,
     direction,
-    selectedNote: notes[noteIndex],
+    selectedNoteKey: noteKeys[noteIndex],
     responseIndex,
   };
 }
 
-function pressActivePianoKey(noteIndex) {
+function pressActivePianoKey(noteKey) {
   document.querySelectorAll('.virtual-piano li').forEach((note) => {
     note.classList.remove('active');
   });
-  const activeNote = document.getElementById(`note-${noteIndex}`);
+  const activeNote = document.getElementById(`note-${noteKey}`);
   activeNote.classList.add('active');
 }
 
 function generateQuestion() {
-  const { direction, selectedNote, responseIndex } = selectNoteAndDirection();
-  const responseNote = notes[responseIndex];
+  const { direction, selectedNoteKey, responseIndex } = selectNoteAndDirection();
+  const selectedNote = noteMapping[selectedNoteKey][currentNotation];
+  const responseNoteKey = noteKeys[responseIndex];
+  const responseNote = noteMapping[responseNoteKey][currentNotation];
+
   questionElement.classList.add('fade-animation');
   setTimeout(() => {
-    questionElement.innerHTML = `¿Cuál es la nota activa, qué está a la <br><b>${direction}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
+    questionElement.innerHTML = `¿Cuál es la nota activa, qué está a la <br><b>${directionMapping[direction][currentLanguage]}</b> de la nota <span class="bg-gray-700 text-white p-1 mr-0.5">${selectedNote}</span>?`;
     questionElement.dataset.response = responseNote;
     questionElement.classList.remove('fade-animation');
     startTime = Date.now();
-    pressActivePianoKey(responseIndex + 1);
+    pressActivePianoKey(responseNoteKey);
   }, 250);
 }
 
@@ -157,4 +185,20 @@ function shakeButtonError() {
     );
     verifyButton.classList.add('bg-blue-500', 'hover:bg-blue-700');
   }, 820);
+}
+
+function showNoteLabels(language) {
+  document
+    .querySelectorAll('.virtual-piano .note-label')
+    .forEach((note, index) => {
+      note.innerHTML = Object.values(noteMapping)[index][language];
+    });
+}
+
+function hideNoteLabels() {
+  document
+    .querySelectorAll('.virtual-piano .note-label')
+    .forEach((note, index) => {
+      note.innerHTML = '';
+    });
 }
