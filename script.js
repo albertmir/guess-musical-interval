@@ -5,7 +5,7 @@ let wrongCount = 0;
 let totalResponseTime = 0;
 let questionCount = 0;
 let startTime;
-let lastNoteIndex = null;
+let lastResponseIndex = null;
 
 const notesEs = ['DO', 'RE', 'MI', 'FA', 'SOL', 'LA', 'SI'];
 const notesEn = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -29,20 +29,25 @@ function toggleScale() {
 
 function selectNoteAndDirection() {
   let noteIndex;
+  let responseIndex;
+  let direction;
+
   do {
     noteIndex = Math.floor(Math.random() * notes.length);
-  } while (noteIndex === lastNoteIndex);
-  const direction = Math.random() > 0.5 ? 'derecha' : 'izquierda';
-  lastNoteIndex = noteIndex;
+    direction = Math.random() > 0.5 ? 'derecha' : 'izquierda';
+    responseIndex =
+      direction === 'derecha'
+        ? (noteIndex + 1) % notes.length
+        : (noteIndex + notes.length - 1) % notes.length;
+  } while (responseIndex === lastResponseIndex);
+
+  lastResponseIndex = responseIndex; 
 
   return {
     noteIndex,
     direction,
     selectedNote: notes[noteIndex],
-    responseIndex:
-      direction === 'derecha'
-        ? (noteIndex + 1) % notes.length
-        : (noteIndex - 1 + notes.length) % notes.length,
+    responseIndex,
   };
 }
 
